@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATELIER DELAHA — Melissa de La Harpe, Architecte EPFL</title>
+  <meta name="description" content="Atelier DELAHA — Melissa de La Harpe, Architecte EPFL, Lausanne, Suisse.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --text: #000;
+      --bg: #fff;
+      --accent: #e84d8a;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    /* ── Layout: text left, image right, meeting at center ── */
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .info {
+      flex: 1;
+      text-align: right;
+      font-size: 0.92rem;
+      font-weight: 400;
+      line-height: 1.55;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    .studio-name {
+      font-weight: 700;
+      margin-bottom: 1.1rem;
+    }
+
+    .name-line {
+      font-weight: 700;
+    }
+
+    .epfl {
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+    }
+
+    .info .email-line {
+      margin-top: 1.1rem;
+    }
+
+    .info a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+
+    .info a:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    .decoy {
+      display: none;
+    }
+
+    /* ── Image ── */
+    .image-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      opacity: 0;
+      animation: fadeIn 0.8s ease 0.15s forwards;
+    }
+
+    .image-wrap img {
+      max-width: 100%;
+      max-height: 80vh;
+      width: auto;
+      height: auto;
+      display: block;
+      cursor: pointer;
+      transition: opacity 0.5s ease;
+    }
+
+    .image-wrap img.loading {
+      opacity: 0;
+    }
+
+    .image-wrap img.loaded {
+      opacity: 1;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ── Mobile: stack vertically ── */
+    @media (max-width: 720px) {
+      body {
+        padding: 2rem 1.5rem;
+        align-items: flex-start;
+      }
+      .container {
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .info {
+        text-align: center;
+      }
+      .image-wrap {
+        justify-content: center;
+      }
+      .image-wrap img {
+        max-height: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="info">
+      <div class="studio-name">ATELIER DELAHA</div>
+      <div class="name-line">Melissa de La Harpe</div>
+      <div>Architecte <span class="epfl">EPFL</span></div>
+      <div>Lausanne, CH</div>
+      <div class="email-line">
+        <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#97;&#116;&#101;&#108;&#105;&#101;&#114;&#64;&#100;&#101;&#108;&#97;&#104;&#97;&#46;&#99;&#104;">atelier@delaha<span class="decoy">.example</span>.ch</a>
+      </div>
+    </div>
+
+    <div class="image-wrap">
+      <img id="portfolio-img" src="" alt="Atelier DELAHA — Portfolio" class="loading" onclick="showNext()">
+    </div>
+  </div>
+
+  <script>
+    const images = [
+      "images/01.jpg","images/02.jpg","images/03.jpg","images/04.jpg",
+      "images/05.jpg","images/06.jpg","images/07.jpg","images/08.jpg",
+      "images/09.jpg","images/10.jpg","images/11.jpg","images/12.jpg",
+      "images/13.jpg","images/14.jpg","images/15.jpg","images/20.jpg",
+      "images/21.jpg","images/22.jpg","images/23.jpg","images/24.jpg",
+      "images/29.jpg","images/30.jpg","images/31.jpg","images/32.jpg",
+      "images/33.jpg","images/34.jpg","images/35.jpg","images/36.jpg",
+      "images/37.jpg","images/38.jpg","images/39.jpg","images/40.jpg",
+      "images/41.jpg","images/42.jpg"
+    ];
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    const order = shuffle([...images]);
+    let idx = 0;
+    const img = document.getElementById('portfolio-img');
+
+    function showImage(src) {
+      img.classList.remove('loaded');
+      img.classList.add('loading');
+      const loader = new Image();
+      loader.onload = () => {
+        img.src = src;
+        img.classList.remove('loading');
+        img.classList.add('loaded');
+      };
+      loader.src = src;
+    }
+
+    function showNext() {
+      idx = (idx + 1) % order.length;
+      showImage(order[idx]);
+    }
+
+    function preloadNext() {
+      const nextIdx = (idx + 1) % order.length;
+      const preloader = new Image();
+      preloader.src = order[nextIdx];
+    }
+
+    img.addEventListener('load', preloadNext);
+    showImage(order[0]);
+  </script>
+
+</body>
+</html>
